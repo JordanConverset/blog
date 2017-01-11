@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - An Article{% endblock %}
+
+{% block body %}
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('{{ asset('bundles/cleanblog/img/post-bg.jpg') }}')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="site-heading">
+                        <h1>Clash of Blog</h1>
+                        <hr class="small">
+                        <span class="subheading">Add Article</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article>
+        <div class='container'>
+            <div class='row'>
+                {{ form_start(articleForm) }}
+                {#{{ form_row(articleForm.title) }}#}
+                <div>
+                    {{ form_label(articleForm.title) }}
+                    {{ form_errors(articleForm.title) }}
+                    {{ form_widget(articleForm.title) }}
+                </div>
+                {{ form_row(articleForm.headerImage) }}
+                {{ form_row(articleForm.author) }}
+                {{ form_row(articleForm.content) }}
+                <input type="submit" name="submit_article" value="Envoyer">
+                {{ form_end(articleForm) }}
+            </div>
+        </div>
+    </article>
+{% endblock %}

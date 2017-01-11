@@ -1,3 +1,9 @@
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+redirect_homepage:
+    path: /
+    defaults:
+      _controller: FrameworkBundle:Redirect:redirect
+      route: article_homepage
+      permanent: true
