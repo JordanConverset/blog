@@ -36,11 +36,49 @@ class ArticleController extends Controller
     /**
      * @Route("/add", name="add_article")
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
     	$article = new Article();
     	$form = $this->createForm(ArticleType::class, $article);
+
+    	$form->handleRequest($request);
+
+    	// BDD
+    	if($form->isValid()) {
+    		// récupère la table
+    		$em = $this->getDoctrine()->getManager();
+    		// requête pour insertion
+    		$em->persist($article);
+    		// execute
+    		$em->flush();
+
+    		$this->addFlash('success', 'The article was successfully inserted in database!');
+
+    		return  $this->redirectToRoute('article_homepage');
+    	}
         // replace this example code with whatever you need
-        return $this->render('article/add.html.twig', ['articleForm' => $form->createView()]);
+        return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article]);
+    }
+
+     /**
+     * @Route("/update/{id}", requirements={"id" = "\d+"}, name="update_article")
+     */
+    public function updateAction(Article $article, Request $request)
+    {
+    	$form = $this->createForm(ArticleType::class, $article);
+
+    	$form->handleRequest($request);
+
+    	// BDD
+    	if($form->isValid()) {
+    		// update
+    		$this->getDoctrine()->getManager()->flush();
+
+    		$this->addFlash('success', 'The article was successfully updated in database!');
+
+    		return  $this->redirectToRoute('article_homepage');
+    	}
+        // replace this example code with whatever you need
+        return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article]);
     }
 }

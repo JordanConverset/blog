@@ -3,7 +3,6 @@
 {% block title %}{{ parent() }} - An Article{% endblock %}
 
 {% block body %}
-
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
     <header class="intro-header" style="background-image: url('{{ asset('bundles/cleanblog/img/post-bg.jpg') }}')">
@@ -19,6 +18,7 @@
             </div>
         </div>
     </header>
+    {{ parent() }}
     <!-- Post Content -->
     <article>
         <div class="container">

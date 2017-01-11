@@ -3,6 +3,13 @@
 {% block title %}{{ parent() }} - An Article{% endblock %}
 
 {% block body %}
+    {% if 'add_article' == app.request.get('_route') %}
+        {% set submitButton = 'Add' %}
+        {% set title = 'Add a new article' %}
+    {% else %}
+        {% set submitButton = 'Update' %}
+        {% set title = 'Update the article "' ~ article.title ~ '"' %}
+    {% endif %}
 
     <!-- Page Header -->
     <!-- Set your background image for this header on the line below. -->
@@ -13,27 +20,28 @@
                     <div class="site-heading">
                         <h1>Clash of Blog</h1>
                         <hr class="small">
-                        <span class="subheading">Add Article</span>
+                        <span class="subheading">{{ title }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-
+    {{ parent() }}
     <article>
+            
         <div class='container'>
             <div class='row'>
-                {{ form_start(articleForm) }}
+                {{ form_start(articleForm, {'attr': {'novalidate' : 'novalidate'}}) }}
                 {#{{ form_row(articleForm.title) }}#}
                 <div>
                     {{ form_label(articleForm.title) }}
-                    {{ form_errors(articleForm.title) }}
                     {{ form_widget(articleForm.title) }}
+                    {{ form_errors(articleForm.title) }}
                 </div>
                 {{ form_row(articleForm.headerImage) }}
                 {{ form_row(articleForm.author) }}
                 {{ form_row(articleForm.content) }}
-                <input type="submit" name="submit_article" value="Envoyer">
+                <input class='btn btn-success pull-right' type="submit" name="submit_article" value="{{ submitButton }}">
                 {{ form_end(articleForm) }}
             </div>
         </div>

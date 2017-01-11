@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -20,6 +21,7 @@ class Article
 
 	/**
 	 * @ORM\Column(type="string", length=255)
+	 * @Assert\NotBlank(message="Please type a title for your article.")
 	 */
 	private $title;
 
@@ -30,6 +32,7 @@ class Article
 
 	/**
 	 * @ORM\Column
+	 * @Assert\NotBlank()
 	 */
 	private $author;
 
@@ -40,6 +43,7 @@ class Article
 
 	/**
 	 * @ORM\Column(type="text")
+	 * @Assert\NotBlank()
 	 */
 	private $content;
 
@@ -98,7 +102,7 @@ class Article
 		$this->content = $content;
 	}
 
-	public function construct()
+	public function __construct()
 	{
 		$this->createdAt = new \Datetime();
 	}
