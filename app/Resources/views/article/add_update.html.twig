@@ -38,6 +38,9 @@
                     {{ form_widget(articleForm.title) }}
                     {{ form_errors(articleForm.title) }}
                 </div>
+                {% if 'update_article' == app.request.get('_route') %}
+                    <img src="{{ oldArticleImage }}" width="600" />
+                {% endif %}
                 {{ form_row(articleForm.headerImage) }}
                 {{ form_row(articleForm.author) }}
                 {{ form_row(articleForm.content) }}

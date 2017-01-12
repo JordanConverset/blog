@@ -6,8 +6,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use AppBundle\Entity\Article;
 use AppBundle\Form\ArticleType;
+
 
 /**
  * @Route("/article")
@@ -20,8 +23,9 @@ class ArticleController extends Controller
      */
     public function homepageAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('article/homepage.html.twig');
+        $em = $this->getDoctrine()->getManager();
+    	$articles = $em->getRepository('AppBundle:Article')->findAll();
+      	return $this->render('article/homepage.html.twig',["articles"=> $articles]);
     }
 
     /**
@@ -45,6 +49,8 @@ class ArticleController extends Controller
 
     	// BDD
     	if($form->isValid()) {
+    		//Upload file
+    		$this->get('image.uploader')->upload($article);
     		// récupère la table
     		$em = $this->getDoctrine()->getManager();
     		// requête pour insertion
@@ -65,12 +71,16 @@ class ArticleController extends Controller
      */
     public function updateAction(Article $article, Request $request)
     {
+    	$articleImgPath = $article->getHeaderImage();
+    	$article->setHeaderImage(new File($this->getParameter('file_path').$articleImgPath));
+
     	$form = $this->createForm(ArticleType::class, $article);
 
     	$form->handleRequest($request);
-
     	// BDD
     	if($form->isValid()) {
+    		//Upload file
+    		$this->get('image.uploader')->upload($article);
     		// update
     		$this->getDoctrine()->getManager()->flush();
 
@@ -79,6 +89,6 @@ class ArticleController extends Controller
     		return  $this->redirectToRoute('article_homepage');
     	}
         // replace this example code with whatever you need
-        return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article]);
+        return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article, 'oldArticleImage' => $articleImgPath]);
     }
 }

@@ -27,6 +27,7 @@ class Article
 
 	/**
 	 * @ORM\Column
+	 * @Assert\Image()
 	 */
 	private $headerImage;
 
