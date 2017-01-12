@@ -26,7 +26,7 @@ class Article
 	private $title;
 
 	/**
-	 * @ORM\Column
+	 * @ORM\Column(nullable=true)
 	 * @Assert\Image()
 	 */
 	private $headerImage;

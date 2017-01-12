@@ -30,10 +30,10 @@
                             {{ article.title}}
                         </h2>
                         <p class="post-content">
-                            {{ article.content }}
+                            {{ article.content|purify }}
                         </p>
                     </a>
-                    <p class="post-meta">Posted by <a href="#">{{ article.author }}</a></p>
+                    <p class="post-meta">Posted by <a href="#">{{ article.author }}</a> at {{ article.createdAt|date('l jS \\of F Y') }}</p>
                 </div>
             </div>
         </div>

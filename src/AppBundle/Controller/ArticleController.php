@@ -31,10 +31,13 @@ class ArticleController extends Controller
     /**
      * @Route("/{id}", requirements={"id"="\d+"}, defaults={"id" = 1}, name="show_article")
      */
-    public function showAction()
+    public function showAction(Article $article)
     {
         // replace this example code with whatever you need
-        return $this->render('article/show.html.twig');
+        return $this->render('article/show.html.twig',[
+	      'article'=> $article,
+	      'img'=> $article->getHeaderImage()
+	    ]);
     }
 
     /**
@@ -60,7 +63,7 @@ class ArticleController extends Controller
 
     		$this->addFlash('success', 'The article was successfully inserted in database!');
 
-    		return  $this->redirectToRoute('article_homepage');
+            return $this->redirectToRoute('show_article', ['id'=> $article->getId()]);
     	}
         // replace this example code with whatever you need
         return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article]);
@@ -71,9 +74,10 @@ class ArticleController extends Controller
      */
     public function updateAction(Article $article, Request $request)
     {
-    	$articleImgPath = $article->getHeaderImage();
-    	$article->setHeaderImage(new File($this->getParameter('file_path').$articleImgPath));
-
+        $articleImgPath = $article->getHeaderImage();
+    	if($articleImgPath != null){
+            $article->setHeaderImage(new File($this->getParameter('file_path').$articleImgPath));
+        }
     	$form = $this->createForm(ArticleType::class, $article);
 
     	$form->handleRequest($request);
@@ -81,12 +85,15 @@ class ArticleController extends Controller
     	if($form->isValid()) {
     		//Upload file
     		$this->get('image.uploader')->upload($article);
+            if(!$article->getHeaderImage()){
+                $article->setHeaderImage($articleImgPath);
+            }
     		// update
     		$this->getDoctrine()->getManager()->flush();
 
     		$this->addFlash('success', 'The article was successfully updated in database!');
 
-    		return  $this->redirectToRoute('article_homepage');
+    		return $this->redirectToRoute('show_article', ['id'=> $article->getId()]);
     	}
         // replace this example code with whatever you need
         return $this->render('article/add_update.html.twig', ['articleForm' => $form->createView(), 'article' => $article, 'oldArticleImage' => $articleImgPath]);

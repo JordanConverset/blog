@@ -15,7 +15,9 @@ class FileUploader
 
 	public function upload($subject)
 	{
-		$file = $subject->getHeaderImage();
+		if(!$file = $subject->getHeaderImage()){
+			return;
+		}
     	$filename = md5(uniqid()).'.'.$file->guessExtension();
     	//$file->move($this->getParameter('kernel.root_dir').'/../web/uploads/', $filename);
     	$file->move($this->filePath, $filename);
